@@ -15,3 +15,9 @@ def safe_open_w(path):
     '''
     mkdir_p(os.path.dirname(path))
     return open(path, 'w')
+
+def safe_open_wb(path): #write bytes
+    ''' Open "path" for writing, creating any parent directories as needed.
+    '''
+    mkdir_p(os.path.dirname(path))
+    return open(path, 'wb')

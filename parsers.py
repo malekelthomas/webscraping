@@ -41,7 +41,7 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
 
 def save_prices_sg(soup: BeautifulSoup):
     """
-    Grabs prices of a Stadium Goods product
+    Returns dictionary of size keys with price values
     :param soup: BeautifulSoup
     """
     sizes = soup.find_all('span', class_='product-sizes__size')
@@ -49,6 +49,8 @@ def save_prices_sg(soup: BeautifulSoup):
     prices = soup.find_all('span', class_="price")
     sizePriceDict = {}
     for price, size in zip(prices, sizes):
-        sizePriceDict[size[0]] = price[0]
+        sizePriceDict[size.contents[0]] = price.contents[0]
+        
+    return sizePriceDict
     
     

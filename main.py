@@ -9,8 +9,8 @@ def main():
     url, shoeName = sys.argv[1], sys.argv[2]
     res = req.get(url)
     soup = BeautifulSoup(res.content, 'lxml')
-    savedImgs = p.save_product_images_sg(soup, shoeName) #save product images
-    sizePrice = p.save_prices_sg(soup)
+    imgs = p.save_product_images_sg(soup, shoeName) #get product images
+    sizesPrices = p.save_prices_sg(soup) #get product prices
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 import requests as req
 import helpers as h
+from re import sub
+from decimal import Decimal
+import time
+import datetime
 
 
 def save_product_images_sg(soup: BeautifulSoup, shoe_name):
@@ -24,7 +28,6 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
             continue
         removedNums.append(el)
     
-    i = 0
     print("--------------------------Grabbing Images-------------------------------\n")
     for img in imgs:
         try:
@@ -37,7 +40,7 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
         except ValueError:
             print("not a product img")
     print('--------------------------FOUND ALL IMAGES-------------------------------\n')
-    return alreadySaved
+    return alreadySaved, joinedShoeName
 
 def save_prices_sg(soup: BeautifulSoup):
     """
@@ -49,8 +52,27 @@ def save_prices_sg(soup: BeautifulSoup):
     prices = soup.find_all('span', class_="price")
     sizePriceDict = {}
     for price, size in zip(prices, sizes):
-        sizePriceDict[size.contents[0]] = price.contents[0]
+        #parse price
+        parsedPrice = Decimal(sub(r'[^\d.]', '', price.contents[0]))
+        #convert price to int
+        intPrice = int(parsedPrice*100)
+        sizePriceDict[size.contents[0]] = intPrice
         
     return sizePriceDict
+
+def save_release_date_sg(soup: BeautifulSoup):
+    """
+    Returns release date of product
+    :param soup: BeautifulSoup
+    """
     
+    release_date = soup.find_all('td', class_="data")
+    for i in release_date:
+        try:
+            #if exception does not occur this is a date
+            date = datetime.datetime.strptime(i.contents[0],"%B %d, %Y").strftime("%m/%d/%Y")
+            return date
+        except ValueError:
+            continue
+
     

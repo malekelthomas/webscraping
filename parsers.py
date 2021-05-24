@@ -5,7 +5,7 @@ import helpers as h
 
 def save_product_images_sg(soup: BeautifulSoup, shoe_name):
     """
-    Stores and returns image src urls of a Stadium Goods product
+    Returns image src urls of a Stadium Goods product
     :param soup: BeautifulSoup
     """
     imgs = soup.find_all('img')
@@ -34,14 +34,6 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
                         if img['src'] in alreadySaved:
                             continue
                         alreadySaved.append(img['src'])
-                        r = req.get(img['src'])
-                        try:
-                            with h.safe_open_wb('imgs/'+joinedShoeName+'/'+joinedShoeName+'-'+str(i)+'.png') as f:
-                                f.write(r.content)
-                                f.close()
-                            i += 1
-                        except req.exceptions.MissingSchema:
-                            print("invalid url")
         except ValueError:
             print("not a product img")
     print('--------------------------FOUND ALL IMAGES-------------------------------\n')
@@ -52,8 +44,11 @@ def save_prices_sg(soup: BeautifulSoup):
     Grabs prices of a Stadium Goods product
     :param soup: BeautifulSoup
     """
+    sizes = soup.find_all('span', class_='product-sizes__size')
+    sizes.pop(0) #Remove choose your size 
     prices = soup.find_all('span', class_="price")
-    for price in prices:
-        print(price.contents)
+    sizePriceDict = {}
+    for price, size in zip(prices, sizes):
+        sizePriceDict[size[0]] = price[0]
     
     

@@ -48,3 +48,15 @@ def save_product_images_sg(response, shoe_name):
     print('--------------------------FOUND ALL IMAGES-------------------------------\n')
     return alreadySaved
 
+def save_prices_sg(response):
+    """
+    Grabs prices of a Stadium Goods product
+    """
+    
+    html_content = response.content
+    soup = BeautifulSoup(html_content, 'lxml')
+    prices = soup.find_all('span', class_="price")
+    for price in prices:
+        print(price.contents)
+    
+    

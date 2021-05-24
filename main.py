@@ -7,10 +7,10 @@ import sys
 def main():
     
     url, shoeName = sys.argv[1], sys.argv[2]
-    r = req.get(url)
-    soup = BeautifulSoup(r.content, 'lxml')
-   # savedImgs = p.save_product_images_sg(r, shoeName) #save product images
-    p.save_prices_sg(soup)
+    res = req.get(url)
+    soup = BeautifulSoup(res.content, 'lxml')
+    savedImgs = p.save_product_images_sg(res, shoeName) #save product images
+    sizePrice = p.save_prices_sg(soup)
 
 if __name__ == "__main__":
     main()

@@ -3,12 +3,11 @@ import requests as req
 import helpers as h
 
 
-def save_product_images_sg(response, shoe_name):
+def save_product_images_sg(soup: BeautifulSoup, shoe_name):
     """
     Stores and returns image src urls of a Stadium Goods product
+    :param soup: BeautifulSoup
     """
-    html_content = response.content
-    soup = BeautifulSoup(html_content, 'lxml')
     imgs = soup.find_all('img')
     
     alreadySaved = [] #already saved imgs
@@ -48,13 +47,11 @@ def save_product_images_sg(response, shoe_name):
     print('--------------------------FOUND ALL IMAGES-------------------------------\n')
     return alreadySaved
 
-def save_prices_sg(response):
+def save_prices_sg(soup: BeautifulSoup):
     """
     Grabs prices of a Stadium Goods product
+    :param soup: BeautifulSoup
     """
-    
-    html_content = response.content
-    soup = BeautifulSoup(html_content, 'lxml')
     prices = soup.find_all('span', class_="price")
     for price in prices:
         print(price.contents)

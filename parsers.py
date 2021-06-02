@@ -1,9 +1,7 @@
+from posixpath import join
 from bs4 import BeautifulSoup
-import requests as req
-import helpers as h
 from re import sub
 from decimal import Decimal
-import time
 import datetime
 
 
@@ -34,9 +32,12 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
             if img.get('alt') != None:
                 for name in removedNums:
                     if img.get('alt').index(name) != None:
-                        if img['src'] in alreadySaved:
+                        try:
+                            if img['src'] in alreadySaved:
+                                continue
+                            alreadySaved.append(img['src'])
+                        except KeyError:
                             continue
-                        alreadySaved.append(img['src'])
         except ValueError:
             print("not a product img")
     print('--------------------------FOUND ALL IMAGES-------------------------------\n')
@@ -44,7 +45,7 @@ def save_product_images_sg(soup: BeautifulSoup, shoe_name):
 
 def save_prices_sg(soup: BeautifulSoup):
     """
-    Returns dictionary of size keys with price values
+    Returns dictionary of size keys with price values for Stadium Goods
     :param soup: BeautifulSoup
     """
     sizes = soup.find_all('span', class_='product-sizes__size')
@@ -76,3 +77,26 @@ def save_release_date_sg(soup: BeautifulSoup):
             continue
 
     
+def get_links_sg(soup: BeautifulSoup):
+    """
+    Gets all the shoe links after clicking the brand in the nav bar
+    """
+    
+    shoe_links = soup.find_all('a', class_="ProductSummary___StyledA-sc-1ykpmp8-1")
+    
+    return shoe_links
+
+def get_product_name_sg(name: str):
+    """
+    Remove price from product name
+    """
+    splitName = name.split(", ")
+    fullName = []
+    
+    for i in splitName:
+        if '$' in i:
+            continue
+        fullName.append(i)
+        
+    fullName = (' ').join(fullName)
+    return fullName

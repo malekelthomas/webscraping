@@ -57,7 +57,10 @@ def save_prices_sg(soup: BeautifulSoup):
         parsedPrice = Decimal(sub(r'[^\d.]', '', price.contents[0]))
         #convert price to int
         intPrice = int(parsedPrice*100)
-        sizePriceDict[size.contents[0]] = intPrice
+        try:
+            sizePriceDict[size.contents[0]] = intPrice
+        except IndexError:
+            continue
         
     return sizePriceDict
 
